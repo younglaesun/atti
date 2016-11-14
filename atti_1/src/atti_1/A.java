@@ -7,6 +7,7 @@ public class A {
           System.out.println("우아");
           System.out.println("zzzzz");
           System.out.println("슈발 이거 모야");
+          System.out.println("이게 뭐람");
 	}
 
 }
