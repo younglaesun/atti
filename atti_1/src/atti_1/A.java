@@ -9,6 +9,7 @@ public class A {
           System.out.println("슈발 이거 모야");
           System.out.println("이게 뭐람");
           System.out.println("개빡");
+          System.out.println("어--");
 	}
 
 }
