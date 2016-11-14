@@ -11,6 +11,8 @@ public class A {
           System.out.println("개빡");
           System.out.println("어--");
           System.out.println("머냐 ㅡㅋ");
+          System.out.println("a머냐 ㅡㅋ");
+          
 	}
 
 }
