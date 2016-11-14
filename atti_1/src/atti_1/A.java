@@ -13,6 +13,8 @@ public class A {
           System.out.println("머냐 ㅡㅋ");
           System.out.println("a머냐 ㅡㅋ");
           System.out.println("그럼 20000!");
+          System.out.println("a머냐 ㅡ--ㅋ");
+
           
 	}
 
