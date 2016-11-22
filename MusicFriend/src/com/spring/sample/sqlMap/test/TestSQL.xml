@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="test">
+		
+	<select id ="getTest"
+		    parameterClass="java.util.HashMap" 
+		    resultClass="java.util.HashMap"><!-- String은 기본 자료형이기때문에 String만 써준다. -->
+		SELECT A.TEST_NO, A.TEST_CON
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY TEST_NO DESC) AS RNUM, TEST_NO, TEST_CON
+	          FROM TEST 
+		      WHERE 1=1
+		      <isNotEmpty>
+		      	AND TEST_CON LIKE '%' || #searchText# || '%'
+		      </isNotEmpty> 
+		      ) A
+		WHERE RNUM BETWEEN #start# AND #end#
+		<!-- <isEmpty></isEmpty>
+		<isEqual compareValue=""></isEqual>
+		<isNotEqual compareValue=""></isNotEqual> -->
+	</select>
+	<select id="getTestCount" parameterClass="java.util.HashMap"
+							  resultClass="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM TEST
+		where 1=1
+		<isNotEmpty property="searchText">
+			AND TEST_NO LIKE '%' || #searchText# || '%'
+			OR TEST_CON LIKE '%' || #searchText# || '%'
+		</isNotEmpty>
+	</select>
+
+	<select id = "getTestCon"
+			parameterClass ="java.util.HashMap"
+			resultClass = "java.util.HashMap">
+		SELECT TEST_NO, TEST_CON, TEST_FILE, SUBSTR(TEST_FILE, INSTR(TEST_FILE, '.', -1) +1) AS FILE_EXT
+		FROM TEST
+		WHERE TEST_NO= #testNo#
+	</select>
+<!--==================================================================================== -->
+	<select id ="getTemp"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+			SELECT A.NO, A.NAME, A.ACCOUNT, A.JOINDT
+	      FROM (SELECT ROW_NUMBER() OVER(ORDER BY NO DESC) AS RNUM,
+	      NO, NAME, ACCOUNT, JOINDT
+	      FROM TEMP
+	      WHERE 1 = 1
+	      <isNotEmpty property="searchText">
+	         AND NAME LIKE '%' || #searchText# || '%'
+	         OR NO LIKE '%' || #searchText# || '%'
+	      </isNotEmpty>
+	      )A
+	      WHERE A.RNUM BETWEEN #start# AND #end#
+
+	</select>
+	<select id = "getTempCon" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT NO,NAME,ACCOUNT,JOINDT
+		FROM TEMP
+		WHERE NO = #testNo#
+	</select>
+	 <select id="getTempCount" parameterClass="java.util.HashMap"
+      resultClass="Integer">
+      SELECT COUNT(*) AS CNT
+      FROM TEMP
+      WHERE 1 = 1
+      <isNotEmpty property="searchText">
+         AND NAME LIKE '%' || #searchText# || '%'
+         OR NO LIKE '%' || #searchText# || '%'
+         OR ACCOUNT LIKE '%' || #searchText# || '%'
+         OR JOINDT LIKE '%' || #searchText# || '%'
+      </isNotEmpty>
+   </select>
+   <insert id="insertTest"
+   		   parameterClass="java.util.HashMap">
+		INSERT INTO TEST(TEST_NO, TEST_CON, TEST_FILE)
+		VALUES(TEST_SEQ.NEXTVAL, #textCon#, #textFile#)
+   </insert>
+   
+   <select id="getMem"
+   		   parameterClass="java.util.HashMap"
+   		   resultClass = "java.util.HashMap">
+		SELECT MEM_NO, MEM_ID, MEM_NM
+		FROM MEM
+		WHERE MEM_ID = #memId#
+		AND MEM_PW = #memPw#   		      	
+   </select>
+   <update id="updateTest" parameterClass="java.util.HashMap">
+		UPDATE TEST SET TEST_CON = #testCon#,
+						TEST_FILE = #testFile#
+		WHERE TEST_NO = #testNo#
+   </update>
+   <delete id="deleteTest" parameterClass="java.util.HashMap">
+   		DELETE FROM TEST
+   		WHERE TEST_NO = #testNo#
+   </delete>
+   <select id="test11ajax" resultClass="java.util.HashMap">
+   		SELECT A.name, COUNT(*) AS data
+		FROM(SELECT CASE WHEN TEST_FILE IS NULL
+	                     THEN '파일없음'
+	                     ELSE '파일있음'
+	          	    END AS name
+	         FROM TEST) A
+		GROUP BY A.name
+		UNION ALL
+		SELECT 'TOTAL' AS name, COUNT(*) AS data
+		FROM TEST
+   </select>
+</sqlMap>
